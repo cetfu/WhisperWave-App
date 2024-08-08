@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./WhisperWave-Server
+    container_name: backend
+    ports:
+      - "3200:3200"
+    volumes:
+      - ./WhisperWave-Server/database:/root/database
+    networks:
+      - app-network
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+    restart: always
+  frontend:
+    build:
+      context: ./WhisperWave-App
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    depends_on:
+      - backend
+    restart: always
+networks:
+  app-network:
+    driver: bridge
