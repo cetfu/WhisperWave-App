@@ -18,13 +18,13 @@ export default function Footer() {
                 "flex items-center justify-center gap-2 text-accent mt-5"
             )}>
                 {/*    socials */}
-                <Link href={"#"}>
+                <Link href={"/#"}>
                     <FaFacebookF size={25} className={"text-accent"}/>
                 </Link>
-                <Link href={"#"}>
+                <Link href={"/#"}>
                     <FaLinkedinIn size={25} className={"text-accent"}/>
                 </Link>
-                <Link href={"#"}>
+                <Link href={"/#"}>
                     <FaXTwitter size={25} className={"text-accent"}/>
                 </Link>
             </div>
@@ -32,7 +32,7 @@ export default function Footer() {
                 "flex justify-center mt-5"
             )}>
                 {/*    copyright */}
-                <p>© 2024 | Cetfu Tech</p>
+                <p>© 2024 |&nbsp;<Link href={"/#"}>Cetfu Tech</Link></p>
             </div>
             <div className={cn(
                 "flex justify-center my-5"
