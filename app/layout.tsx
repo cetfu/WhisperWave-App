@@ -1,8 +1,16 @@
 import type {Metadata} from "next";
-import {Inter} from "next/font/google";
+import {Inter as FontSans} from "next/font/google"
 import "./globals.css";
 
-const inter = Inter({subsets: ["latin"]});
+import {cn} from "@/lib/utils"
+import {ThemeProvider} from "@/components/theme-provider";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+
+const fontSans = FontSans({
+    subsets: ["latin"],
+    variable: "--font-sans",
+})
 
 export const metadata: Metadata = {
     title: {
@@ -27,7 +35,23 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <body className={cn(
+            "min-h-screen bg-card font-sans antialiased",
+            fontSans.variable
+        )}>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
+            <Header/>
+            <main className={"flex flex-col h-[90vh]"}>
+                {children}
+            </main>
+            <Footer/>
+        </ThemeProvider>
+        </body>
         </html>
     );
 }
