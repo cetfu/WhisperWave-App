@@ -24,3 +24,21 @@ export async function getThreadDetails(qrContent: string): Promise<Thread | unde
         console.log("error")
     }
 }
+
+export async function sendThreadMessage(qrContent: string, message: string) {
+    try {
+        const res = await fetch(`http://localhost:3000/api/threads/${qrContent}`, {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                message: message
+            })
+        })
+        console.log("hello world")
+        return res.json()
+    } catch (e){
+        console.log("error")
+    }
+}
