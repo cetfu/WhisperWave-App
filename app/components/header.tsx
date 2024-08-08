@@ -1,4 +1,3 @@
-import {ModeToggle} from "@/components/toggle-theme";
 import Link from "next/link";
 
 export default function Header(){
@@ -11,7 +10,6 @@ export default function Header(){
                     </Link>
                 </h1>
             </div>
-            {/*<ModeToggle />*/}
         </header>
     )
 }
