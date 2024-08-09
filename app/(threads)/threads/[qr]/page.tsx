@@ -1,11 +1,13 @@
 import React from 'react';
-import {getThreadDetails} from "@/lib/actions";
+import {getThreadDetails, sendThreadMessage} from "@/lib/actions";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 
 import {cn} from "@/lib/utils";
 import {notFound} from "next/navigation"
-import {Threads} from "@/(threads)/threads/[qr]/_components/threads";
+import ThreadMessage from "@/components/thread-message";
 
+export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 async function Page({params: {qr}}: { params: { qr: string } }) {
     const res = await getThreadDetails(qr)
@@ -13,6 +15,15 @@ async function Page({params: {qr}}: { params: { qr: string } }) {
     if (!res) {
         notFound()
     }
+
+    const send = async (formData: FormData) => {
+        "use server"
+
+        const message = formData.get("message") as string
+        await sendThreadMessage(qr, message)
+    }
+
+    console.log("res at page", res)
 
     return (
         <Card className={"w-full h-full grow"}>
@@ -27,7 +38,12 @@ async function Page({params: {qr}}: { params: { qr: string } }) {
                 "lg:grid-cols-3",
                 "xl:grid-cols-4",
             )}>
-                <Threads messages={res.messages} qrContent={qr} />
+                <form action={send}>
+                    <ThreadMessage createdAt={new Date()} newThread={true}/>
+                </form>
+                {res.messages && res.messages.map(message => (
+                    <ThreadMessage message={message.message} createdAt={message.created_at} key={message.id}/>
+                ))}
             </CardContent>
         </Card>
     );
