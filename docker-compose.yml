@@ -7,14 +7,17 @@ services:
     container_name: backend
     ports:
       - "3200:3200"
-    volumes:
-      - ./WhisperWave-Server/database:/root/database
     networks:
       - app-network
     dns:
       - 1.1.1.1
       - 1.0.0.1
     restart: always
+    environment:
+      - DATABASE_URL=postgresql://postgres:cetfusmosthighsecpassword@database:5432/whisperwave
+    depends_on:
+      database:
+        condition: service_healthy
   frontend:
     build:
       context: ./WhisperWave-App
@@ -26,6 +29,26 @@ services:
     depends_on:
       - backend
     restart: always
+  database:
+    image: postgres:latest
+    container_name: postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: cetfusmosthighsecpassword
+      POSTGRES_DB: whisperwave
+    volumes:
+      - ./postgresql:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 networks:
   app-network:
     driver: bridge
