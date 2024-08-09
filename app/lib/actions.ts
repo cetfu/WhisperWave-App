@@ -1,5 +1,8 @@
 "use server"
 
+import {revalidateTag} from "next/cache";
+import {API_URL} from "@/constants";
+
 type Thread = {
     thread_id: number,
     title: string,
@@ -18,16 +21,18 @@ type Message = {
 
 export async function getThreadDetails(qrContent: string): Promise<Thread | undefined> {
     try {
-        const res = await fetch(`http://localhost:3000/api/threads/${qrContent}`)
-        return res.json()
-    } catch (e){
+        const res = await fetch(`${API_URL}/threads/${qrContent}`)
+        const data = await res.json()
+        console.log("data at get thread details",data)
+        return data
+    } catch (e) {
         console.log("error")
     }
 }
 
 export async function sendThreadMessage(qrContent: string, message: string) {
     try {
-        const res = await fetch(`http://localhost:3000/api/threads/${qrContent}`, {
+        const res = await fetch(`${API_URL}/threads/${qrContent}`, {
             method: "post",
             headers: {
                 "Content-Type": "application/json",
@@ -36,9 +41,10 @@ export async function sendThreadMessage(qrContent: string, message: string) {
                 message: message
             })
         })
-        console.log("hello world")
-        return res.json()
-    } catch (e){
+        const data = await res.json()
+        revalidateTag('send-thread-message');
+        return data
+    } catch (e) {
         console.log("error")
     }
 }
